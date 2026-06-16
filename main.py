@@ -1,21 +1,28 @@
 #run: python3 main.py
-import os
 from pathlib import Path
 import tkinter as tk
+from tkinter import filedialog
 
 def main():
     
-    window = tk.Tk()
-    window.title("Sort by Extension")
-    window.geometry("500x300")
-        
-    window.mainloop()
+    root = tk.Tk()
+    root.title("Sort by Extension")
+    root.geometry("500x300")
 
+    source_folder_label = tk.Label(root, text="Source Folder")
+    source_folder_label.grid(row=0, column=0)
+    source_folder_button = tk.Button(root, text="Add Folder", command=add_folder)
+    source_folder_button.grid(row=0, column=2)
 
-    #print("============ SORT BY EXTENSION ============")
-    #source_folder = Path(input("Source folder (enter full path of folder where you're moving files FROM): "))
-    #dest_folder = Path(input("Destination folder (enter full path of folder where you want to move files TO: "))
-    #ext_type = Path(input("Select extension type: "))
+    dest_folder_label = tk.Label(root, text="Destination Folder")
+    dest_folder_label.grid(row=1, column=0)
+    dest_folder_button = tk.Button(root, text="Add Folder", command=add_folder)
+    dest_folder_button.grid(row=1, column=2)
 
+    root.mainloop()
+
+def add_folder():
+    folder_path = filedialog.askdirectory(initialdir="/mnt/c/users", title="Select Folder")
+    
 
 main()
