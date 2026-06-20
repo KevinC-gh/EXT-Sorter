@@ -1,5 +1,5 @@
 #run: python3 main.py
-from pathlib import Path
+import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -20,7 +20,7 @@ def main():
     dest_folder_button = ttk.Button(root, text="Add Destination Folder", command=lambda: add_dest_folder(dest_folder_entry))
     dest_folder_button.grid(row=1, column=0, padx=20, pady=5, sticky="w")
 
-    options = [".png", ".jpg", ".docx", ".pdf"]
+    options = [".png", ".jpg", ".docx", ".pdf", ".txt"]
     dropdown = ttk.Combobox(root, width=15, values=options)
     dropdown.grid(row=2, column=0, padx=20, pady=5, sticky="w")
     dropdown.insert(0, "(Select File Type)")
@@ -42,5 +42,13 @@ def run(dropdown, source_folder_entry, dest_folder_entry):
     file_type_selection = dropdown.get()
     source_folder = source_folder_entry.get()
     dest_folder = dest_folder_entry.get()
-
+    
+    source_files = os.listdir(source_folder)
+    for file in source_files:
+        if file.endswith(file_type_selection):
+            full_source_path = os.path.abspath(os.path.join(source_folder, file))
+            full_dest_path = os.path.abspath(os.path.join(dest_folder, file))
+            os.rename(full_source_path, full_dest_path)
+            print(f"{file} moved successfully")
+            
 main()
