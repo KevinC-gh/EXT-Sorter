@@ -33,17 +33,22 @@ def main():
     dropdown.grid(row=2, column=0, padx=20, pady=5, sticky="nw")
     dropdown.set("Select File Type(s)")
     dropdown.bind("<<ComboboxSelected>>", 
-                  lambda event: list_selected(event, dropdown, dropdown_textbox, options))
+                  lambda event: list_selected(event, dropdown, dropdown_textbox, options)) 
 
-    run_button = ttk.Button(root, text="Run", 
-                            command=lambda: run(dropdown_textbox, source_folder_entry, dest_folder_entry))
+    include_subfolders = tk.IntVar()
+    subfolder_checkbox = ttk.Checkbutton(root, text="Include Subfolders", variable=include_subfolders,
+                                         onvalue=1, offvalue=0)
+    subfolder_checkbox.grid(row=3, column=0, padx=20, pady=10, sticky="w")
+
+    run_button = ttk.Button(root, text="Run",  command=lambda: run(dropdown_textbox, source_folder_entry, 
+                                                dest_folder_entry, status_box, include_subfolders))
     run_button.grid(row=3, column=1, padx=20, pady=10, sticky="nw")
 
-    status_box = tk.Label(root, width=100, state="disabled",
-                           bg=bg_color, relief="flat", bd=0, 
-                           highlightthickness=0)
+    status_box = tk.Label(root, width=100,bg=bg_color, relief="flat",
+                          bd=0, highlightthickness=0, fg="firebrick3")
     status_box.grid(row=4, column=1, padx=20, pady=5, sticky="w")
-
+    
+    
     root.mainloop()
 
 def add_source_folder(source_folder_entry):
@@ -69,13 +74,25 @@ def list_selected(_, dropdown, dropdown_textbox, options):
     options.remove(dropdown_selection)
     dropdown.config(values=options)
 
-def run(dropdown_textbox, source_folder_entry, dest_folder_entry):
+def run(dropdown_textbox, source_folder_entry, dest_folder_entry, status_box, include_subfolders):   
+    if source_folder_entry.get() == '':
+        status_box.config(text="Error: No Source Folder selected")
+        return
+    
+    if dest_folder_entry.get() == '':
+        status_box.config(text="Error: No Destination Folder selected")
+        return
+
+    if dropdown_textbox.get("1.0","end-2c") == '':
+        status_box.config(text="Error: No File Types selected")
+        return
+    
     file_type_selections = dropdown_textbox.get("1.0","end-2c")
     source_folder = source_folder_entry.get()
     dest_folder = dest_folder_entry.get()
     selections_list = file_type_selections.split("\n")
     source_files = os.listdir(source_folder)
-    
+
     for file_type in selections_list:
         for file in source_files:
             if file.endswith(file_type):
