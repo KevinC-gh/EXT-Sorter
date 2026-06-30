@@ -45,17 +45,20 @@ def main():
     run_button.grid(row=3, column=1, padx=20, pady=10, sticky="nw")
 
     status_box = tk.Label(root, width=100,bg=bg_color, relief="flat",
-                          bd=0, highlightthickness=0, fg="firebrick3")
-    status_box.grid(row=4, column=1, padx=20, pady=5, sticky="w")
+                          bd=0, highlightthickness=0, fg="firebrick3",
+                          anchor="w", font=("Arial", 12, "bold"))
+    status_box.grid(row=4, column=1, padx=20, pady=10, sticky="w")
     
     
     root.mainloop()
 
 def add_source_folder(source_folder_entry):
+    source_folder_entry.delete(0, tk.END)
     folder_path = filedialog.askdirectory(initialdir="/mnt/c/users", title="Select Folder")
     source_folder_entry.insert(0, folder_path)
 
 def add_dest_folder(dest_folder_entry):
+    dest_folder_entry.delete(0, tk.END)
     folder_path = filedialog.askdirectory(initialdir="/mnt/c/users", title="Select Folder")
     dest_folder_entry.insert(0, folder_path)
 
@@ -93,6 +96,7 @@ def run(dropdown_textbox, source_folder_entry, dest_folder_entry, status_box, in
     selections_list = file_type_selections.split("\n")
     
     if include_subfolders.get() == False:
+        counter = 0
         source_files = os.listdir(source_folder)
         for file_type in selections_list:
             for file in source_files:
@@ -100,10 +104,15 @@ def run(dropdown_textbox, source_folder_entry, dest_folder_entry, status_box, in
                     full_source_path = os.path.abspath(os.path.join(source_folder, file))
                     full_dest_path = os.path.abspath(os.path.join(dest_folder, file))
                     os.rename(full_source_path, full_dest_path)
-                    print(f"{file} moved successfully")
+                    counter += 1
+        if counter == 0:
+            status_box.config(text=f"No valid files found in {os.path.basename(source_folder)}")
+        else:
+            status_box.config(fg="green4", text=f"{counter} file(s) moved from {os.path.basename(source_folder)} to {os.path.basename(dest_folder)}")
     
     if include_subfolders.get() == True:
         source_file_paths = []
+        counter = 0
         for path, dirs, files in os.walk(source_folder):
             for file in files:
                 source_file_paths.append(os.path.join(path, file))
@@ -113,6 +122,10 @@ def run(dropdown_textbox, source_folder_entry, dest_folder_entry, status_box, in
                     file_name = os.path.basename(file_path)
                     full_dest_path = os.path.abspath(os.path.join(dest_folder, file_name))
                     os.rename(file_path, full_dest_path)
-                    print(f"{file_name} moved successfully")
-                    
+                    counter += 1
+        if counter == 0:
+            status_box.config(text=f"No valid files found in {os.path.basename(source_folder)} or subfolders")
+        else:
+            status_box.config(fg="green4", text=f"{counter} file(s) moved from {os.path.basename(source_folder)} to {os.path.basename(dest_folder)}")
+
 main()
