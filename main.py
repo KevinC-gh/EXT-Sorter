@@ -28,7 +28,14 @@ def main():
     dropdown_textbox = tk.Text(root, width=6, height=1)
     dropdown_textbox.grid(row=2, column=1, padx=20, pady=5, sticky="w")
 
-    options = [".png", ".jpg", ".docx", ".pdf", ".txt"]
+    options = [".3gp", ".7z", ".aac", ".arc", ".arj", ".asp", "aspx", ".au", ".avi", ".bat",
+               ".bin", ".bmp", ".c", ".com", ".cpp", ".cs", ".css", ".csv", ".doc", ".docx",
+               ".dta", ".eml", ".eps", ".exe", ".gif", ".gz", ".htm", "html", ".hqx", ".java",
+               ".jpeg", ".jpg", ".js", ".mov", ".mp3", ".mp4", ".mpg", ".msg", ".pdf", ".pl",
+               ".png", ".py", ".ra", ".rar", ".rss", ".rtf", ".sh", ".sit", ".snd", ".swift",
+               ".tar", ".tif", ".ts", ".txt", ".wav", ".webp", ".wma", ".wmv", ".wps", ".xhtml",
+               ".xlsx", ".z", ".zip"]
+    
     dropdown = ttk.Combobox(root, width=16, values=options, state="readonly")
     dropdown.grid(row=2, column=0, padx=20, pady=5, sticky="nw")
     dropdown.set("Select File Type(s)")
@@ -90,6 +97,16 @@ def run(dropdown_textbox, source_folder_entry, dest_folder_entry, status_box, in
         status_box.config(text="Error: No File Types selected")
         return
 
+    source_folder = source_folder_entry.get()
+    if os.path.isdir(source_folder) == False:
+        status_box.config(text="Error: Invalid Source Folder")
+        return
+    
+    dest_folder = dest_folder_entry.get()
+    if os.path.isdir(dest_folder) == False:
+        status_box.config(text="Error: Invalid Destination Folder")
+        return
+    
     file_type_selections = dropdown_textbox.get("1.0","end-2c")
     source_folder = source_folder_entry.get()
     dest_folder = dest_folder_entry.get()
