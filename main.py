@@ -25,7 +25,7 @@ def main():
                                     command=lambda: add_dest_folder(dest_folder_entry))
     dest_folder_button.grid(row=1, column=0, padx=20, pady=5, sticky="w")
 
-    dropdown_textbox = tk.Text(root, width=6, height=1)
+    dropdown_textbox = tk.Text(root, width=30, height=1)
     dropdown_textbox.grid(row=2, column=1, padx=20, pady=5, sticky="w")
 
     options = [".3gp", ".7z", ".aac", ".arc", ".arj", ".asp", "aspx", ".au", ".avi", ".bat",
@@ -34,13 +34,15 @@ def main():
                ".jpeg", ".jpg", ".js", ".mov", ".mp3", ".mp4", ".mpg", ".msg", ".pdf", ".pl",
                ".png", ".py", ".ra", ".rar", ".rss", ".rtf", ".sh", ".sit", ".snd", ".swift",
                ".tar", ".tif", ".ts", ".txt", ".wav", ".webp", ".wma", ".wmv", ".wps", ".xhtml",
-               ".xlsx", ".z", ".zip"]
+               ".xlsx", ".z", ".zip", 
+               "All Text Formats", "All Image Formats", "All Video Formats", "All Audio Formats",
+               "All Program File Formats", "All Compressed/Archive Formats", "All Web Page File Formats"]
     
-    dropdown = ttk.Combobox(root, width=16, values=options, state="readonly")
+    dropdown = ttk.Combobox(root, width=30, values=options, state="readonly")
     dropdown.grid(row=2, column=0, padx=20, pady=5, sticky="nw")
     dropdown.set("Select File Type(s)")
     dropdown.bind("<<ComboboxSelected>>", 
-                  lambda event: list_selected(event, dropdown, dropdown_textbox, options)) 
+                  lambda event: list_selected(event, dropdown, dropdown_textbox, options))
 
     include_subfolders = tk.BooleanVar()
     subfolder_checkbox = ttk.Checkbutton(root, text="Include Subfolders", variable=include_subfolders,
@@ -73,7 +75,7 @@ def list_selected(_, dropdown, dropdown_textbox, options):
     #display selection option, temporarily enable dropdown textbox edits to allow text to display
     dropdown_textbox.config(state="normal")
     dropdown_selection = dropdown.get()
-    dropdown_textbox.insert("1.0", f"{dropdown_selection}\n")
+    dropdown_textbox.insert(tk.END, f"{dropdown_selection}\n")
     dropdown.set("Select File Type(s)")
     
     #expand dropdown textbox, disable ability for user edits to dropdown textbox
@@ -83,6 +85,13 @@ def list_selected(_, dropdown, dropdown_textbox, options):
     #remove option from dropdown to prevent duplicates
     options.remove(dropdown_selection)
     dropdown.config(values=options)
+
+def get_file_type_selections(dropdown_textbox):
+    file_type_selections = dropdown_textbox.get("1.0","end-2c")
+    if "All Text Formats" in file_type_selections:
+        file_type_selections = file_type_selections.replace("All Text Formats", ".txt\n.rtf\n.docx\n.csv\n.doc\n.wps\n.wpd\n.msg")
+    print(f"file types: {file_type_selections}")
+    return file_type_selections
 
 def run(dropdown_textbox, source_folder_entry, dest_folder_entry, status_box, include_subfolders):   
     if source_folder_entry.get() == '':
@@ -107,11 +116,12 @@ def run(dropdown_textbox, source_folder_entry, dest_folder_entry, status_box, in
         status_box.config(text="Error: Invalid Destination Folder")
         return
     
-    file_type_selections = dropdown_textbox.get("1.0","end-2c")
+    file_type_selections = get_file_type_selections(dropdown_textbox)
     source_folder = source_folder_entry.get()
     dest_folder = dest_folder_entry.get()
     selections_list = file_type_selections.split("\n")
-    
+    print(f"Selections list: {selections_list}")
+
     if include_subfolders.get() == False:
         counter = 0
         source_files = os.listdir(source_folder)
