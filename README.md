@@ -19,3 +19,5 @@ Then run the program using:
 ```
 python3 main.py
 ```
+
+The user interface window should appear and look like this:
