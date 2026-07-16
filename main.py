@@ -117,7 +117,7 @@ def get_file_type_selections(dropdown_textbox):
     
     if "All Image Formats" in file_type_selections:
         file_type_selections = file_type_selections.replace("All Image Formats", 
-                                                            ".jpg\n.jpeg\n.webp\n.gif\n.tif\n.tif\n.bmp\n.eps")
+                                                            ".jpg\n.jpeg\n.png\n.webp\n.gif\n.tif\n.bmp\n.eps")
     
     if "All Audio Formats" in file_type_selections:
         file_type_selections = file_type_selections.replace("All Audio Formats", 
