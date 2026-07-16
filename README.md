@@ -41,7 +41,7 @@ There are a number of special options at the bottom of the dropdown that allow y
 
 The "Include Subfolders" checkbox determines whether or not the program should check for additional folders within the selected source folder and move items from those folders as well.
 
-Once the source folder, destination folder, and file types are selected, use the "Run" button to run the program. IF files were successfully moved, a message specifying the number of files moved should appear.
+Once the source folder, destination folder, and file types are selected, use the "Run" button to run the program. If files were successfully moved, a message specifying the number of files moved should appear.
 
 
 <img width="906" height="270" alt="success" src="https://github.com/user-attachments/assets/c138db24-5f30-4e8a-8457-8463911f4c67" />
